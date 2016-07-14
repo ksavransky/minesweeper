@@ -1,4 +1,4 @@
-thbrequire_relative "tile"
+require_relative "tile"
 
 class Board
   attr_reader :grid
@@ -8,16 +8,23 @@ class Board
   end
 
   def populate
-    @grid.each_index do |row|
-      row.each_index do |col|
-        @grid[row][col] = Tile.new
-      end
+    15.times {bomb_placer}
+  end
+
+  def bomb_counter(pos)
+    bombs = 0
+    x, y = pos
+    surrounding = [[x-1, y+1], [x, y+1], [x+1, y+1], [x-1, y], [x+1, y],
+    [x-1, y-1],[x, y-1], [x+1, y-1]]
+    surrounding.each do |position|
+      bombs += 1 if self[position].value == "B"
     end
+    bombs
   end
 
   def bomb_placer
     rand_pos = [rand(grid.length), rand(grid.length)]
-    self[pos] = Tile.new("B")
+    self[rand_pos] = Tile.new("B")
   end
 
   def [](pos)
@@ -29,4 +36,14 @@ class Board
     row, col = pos
     @grid[row][col] = value
   end
+
+  # def render
+  #   @grid.each do |row|
+  #     p row.map { |el| el.value }.join(" ")
+  #   end
+  # end
 end
+
+# board = Board.new
+# board.populate
+# board.render
