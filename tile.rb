@@ -1,5 +1,5 @@
 class Tile
-  attr_reader :value, :revealed, :flagged
+  attr_accessor :value, :revealed, :flagged
 
   def initialize(value)
     @value = value

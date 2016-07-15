@@ -1,4 +1,5 @@
 require_relative "tile"
+require 'byebug'
 
 class Board
   attr_reader :grid
@@ -48,19 +49,33 @@ class Board
   end
 
   def render
-    @grid.each do |row|
-      p row.map do |el|
-        if el.flagged
-          "F"
-        elsif !el.revealed
-          "X"
+    @grid.each_with_index do |row, idx|
+      row.each_index do |col|
+        pos = [idx,col]
+        if self[pos].flagged
+          print "F"
+        elsif !self[pos].revealed
+          print "X"
         else
-          el.value
+          print self[pos].value
         end
-      end.join(" ")
+      end
+      print "\n"
+    end
+  end
+
+
+  def chain_reveal(pos)
+    # byebug
+    self[pos].revealed = true
+    x, y = pos
+    surrounding = [[x-1, y+1], [x, y+1], [x+1, y+1], [x-1, y], [x+1, y],
+    [x-1, y-1],[x, y-1], [x+1, y-1]]
+    surrounding.each do |position|
+      if self[position] != nil && position[0].between?(0,8) && position[1].between?(0,8)
+        chain_reveal(position) if self[position].value == "O"
+        self[position].revealed = true if self[position].value != "B"
+      end
     end
   end
 end
-
-# board = Board.new
-# board.populate
