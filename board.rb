@@ -25,7 +25,7 @@ class Board
     surrounding = [[x-1, y+1], [x, y+1], [x+1, y+1], [x-1, y], [x+1, y],
     [x-1, y-1],[x, y-1], [x+1, y-1]]
     surrounding.each do |position|
-      if position[0].between?(0,8) && position[1].between?(0,8)
+      if position[0].between?(0,8)
         bombs += 1 if self[position] != nil && self[position].value == "B"
       end
     end
@@ -49,7 +49,18 @@ class Board
 
   def render
     @grid.each do |row|
-      p row.map { |el| el.value }.join(" ")
+      p row.map do |el|
+        if el.flagged
+          "F"
+        elsif !el.revealed
+          "X"
+        else
+          el.value
+        end
+      end.join(" ")
     end
   end
 end
+
+# board = Board.new
+# board.populate
