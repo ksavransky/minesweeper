@@ -64,18 +64,34 @@ class Board
     end
   end
 
-
-  def chain_reveal(pos)
-    # byebug
-    self[pos].revealed = true
-    x, y = pos
-    surrounding = [[x-1, y+1], [x, y+1], [x+1, y+1], [x-1, y], [x+1, y],
-    [x-1, y-1],[x, y-1], [x+1, y-1]]
-    surrounding.each do |position|
-      if self[position] != nil && position[0].between?(0,8) && position[1].between?(0,8)
-        chain_reveal(position) if self[position].value == "O"
-        self[position].revealed = true if self[position].value != "B"
+  def cheat_render
+    @grid.each_with_index do |row, idx|
+      row.each_index do |col|
+        pos = [idx,col]
+        print self[pos].value
       end
+      print "\n"
     end
   end
+
+  def reveal(pos, visited = [])
+    self[pos].revealed = true
+    visited << pos
+
+    x, y = pos
+
+    surrounding = [[x-1, y+1], [x, y+1], [x+1, y+1], [x-1, y], [x+1, y],
+    [x-1, y-1],[x, y-1], [x+1, y-1]]
+
+    if self[pos].value == "0".to_i
+      surrounding.each do |position|
+        if position[0].between?(0,8) && position[1].between?(0,8) && !visited.include?(position)
+          self.reveal(position, visited)
+        end
+      end
+    end
+
+  end
+
+
 end

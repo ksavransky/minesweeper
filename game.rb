@@ -6,7 +6,11 @@ class Game
   end
 
   def play_turn
+    @board.cheat_render
+    print "\n"
+    print "\n"
     @board.render
+
     puts "Do you want to flag a spot? (y/n)"
     first_input = gets.chomp
 
@@ -21,7 +25,7 @@ class Game
         @board.render
         abort("YOU LOSE")
       else
-        @board.chain_reveal(second_input)
+        @board.reveal(second_input)
       end
     end
   end
